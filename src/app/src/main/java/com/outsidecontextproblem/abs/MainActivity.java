@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,25 +24,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]
-                    {
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                    }, FINE_LOCATION_REQUEST);
-        } else {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (! serviceIsRunning()) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]
                         {
-                                Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                        }, BACKGROUND_LOCATION_REQUEST);
+                                Manifest.permission.ACCESS_FINE_LOCATION
+                        }, FINE_LOCATION_REQUEST);
+            } else {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]
+                            {
+                                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                            }, BACKGROUND_LOCATION_REQUEST);
+                }
             }
-        }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-            Intent serviceIntent = new Intent(this, WiFiMonitor.class);
-            startForegroundService(serviceIntent);
+                Intent serviceIntent = new Intent(this, WiFiMonitor.class);
+                startForegroundService(serviceIntent);
+            }
         }
     }
 
@@ -76,5 +79,17 @@ public class MainActivity extends AppCompatActivity {
                 Intent serviceIntent = new Intent(this, WiFiMonitor.class);
                 startForegroundService(serviceIntent);
         }
+    }
+
+    private boolean serviceIsRunning() {
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+
+        for (ActivityManager.RunningServiceInfo service: activityManager.getRunningServices(Integer.MAX_VALUE)) {
+            if (WiFiMonitor.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

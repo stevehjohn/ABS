@@ -52,12 +52,12 @@ public class WiFiMonitor extends Service {
             }
         ).start();
 
-        final String CHANNEL_ID = "Foreground Service Id";
+        final String CHANNEL_ID = "com.outsidecontextproblem.abs";
 
         NotificationChannel notificationChannel = new NotificationChannel(
                 CHANNEL_ID,
                 CHANNEL_ID,
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_LOW
         );
 
         getSystemService((NotificationManager.class)).createNotificationChannel(notificationChannel);
