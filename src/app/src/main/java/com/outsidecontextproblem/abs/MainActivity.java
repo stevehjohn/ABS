@@ -27,8 +27,21 @@ public class MainActivity extends AppCompatActivity {
                     {
                             Manifest.permission.ACCESS_FINE_LOCATION
                     }, FINE_LOCATION_REQUEST);
+        } else {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]
+                        {
+                                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                        }, BACKGROUND_LOCATION_REQUEST);
+            }
         }
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            Intent serviceIntent = new Intent(this, WiFiMonitor.class);
+            startForegroundService(serviceIntent);
+        }
     }
 
     @Override

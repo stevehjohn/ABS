@@ -23,9 +23,11 @@ public class WiFiMonitor extends Service {
 
         new Thread(
             () -> {
+                int c = 1;
+
                 while (true) {
 
-                    Log.e("Service", "Polling...");
+                    Log.e("Service", String.format("Polling %d...", c++));
 
                     WifiManager wifiMgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
                     WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
