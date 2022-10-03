@@ -3,14 +3,15 @@ package com.outsidecontextproblem.abs;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.outsidecontextproblem.abs.services.WiFiMonitor;
 
@@ -79,6 +80,11 @@ public class MainActivity extends AppCompatActivity {
                 Intent serviceIntent = new Intent(this, WiFiMonitor.class);
                 startForegroundService(serviceIntent);
         }
+    }
+
+    private void updateConnectedWiFi(String wiFiName) {
+        TextView textView = findViewById(R.id.textViewWiFiName);
+        textView.setText(wiFiName);
     }
 
     private boolean serviceIsRunning() {
