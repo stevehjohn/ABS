@@ -9,6 +9,7 @@ import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -19,6 +20,23 @@ public class MainActivity extends AppCompatActivity {
 
     private final int FINE_LOCATION_REQUEST = 1;
     private final int BACKGROUND_LOCATION_REQUEST = 2;
+
+    BroadcastReceiver _broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateConnectedWiFi(intent.getStringExtra("Thingy"));
+        }
+    };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.outsidecontextproblem.abs");
+
+        registerReceiver(_broadcastReceiver, intentFilter);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -43,6 +43,12 @@ public class WiFiMonitor extends Service {
 
                     Log.e("Service", name);
 
+                    Intent broadcastIntent = new Intent();
+                    broadcastIntent.setAction("com.outsidecontextproblem.abs");
+                    broadcastIntent.putExtra("Thingy", String.format("%s %d", name, c));
+
+                    sendBroadcast(broadcastIntent);
+
                     try {
                         Thread.sleep(2000);
                         // Thread.sleep(60000);
