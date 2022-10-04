@@ -29,6 +29,7 @@ public class WiFiMonitor extends Service {
     public static final int MESSAGE_REGISTER_CLIENT = 1;
     public static final int MESSAGE_ADD_WIFI_ONLY_HOTSPOT = 2;
     public static final int MESSAGE_REMOVE_WIFI_ONLY_HOTSPOT = 3;
+    public static final int MESSAGE_GET_WIFI_ONLY_HOTSPOTS = 4;
 
     public static final String MESSAGE_KEY_WIFI_NAME = "WIFI";
 
@@ -84,6 +85,9 @@ public class WiFiMonitor extends Service {
 
                         // TODO: Save wiFiSSIDs
                     }
+
+                    break;
+                case MESSAGE_GET_WIFI_ONLY_HOTSPOTS:
 
                     break;
                 default:
