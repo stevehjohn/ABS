@@ -23,33 +23,24 @@ import com.outsidecontextproblem.abs.R;
 public class WiFiMonitor extends Service {
 
     public static final int MESSAGE_REGISTER_CLIENT = 1;
-    public static final int MESSAGE_GET_CURRENT_WIFI = 2;
 
-    private Messenger _messenger;
     private Messenger _client = null;
 
-    private class IncomingHandler extends Handler {
-        private Context applicationContext;
+    private static class IncomingHandler extends Handler {
+        private final WiFiMonitor _wiFiMonitor;
 
-        IncomingHandler(Context context) {
-            applicationContext = context.getApplicationContext();
+        IncomingHandler(WiFiMonitor wiFiMonitor) {
+            _wiFiMonitor = wiFiMonitor;
         }
 
         @Override
         public void handleMessage(Message message) {
+            // noinspection SwitchStatementWithTooFewBranches - Will be adding more
             switch (message.what) {
                 case MESSAGE_REGISTER_CLIENT:
-                    _client = message.replyTo;
+                    _wiFiMonitor._client = message.replyTo;
 
                     break;
-//                case MESSAGE_GET_CURRENT_WIFI:
-//                    Bundle bundle = new Bundle();
-//
-//                    bundle.putString("WIFI", "Blah!");
-//
-//                    message.setData(bundle);
-//
-//                    break;
                 default:
                     super.handleMessage(message);
             }
@@ -78,7 +69,7 @@ public class WiFiMonitor extends Service {
 
                     Log.e("Service", name);
 
-                    String currentWifi = String.format("%s %d", name, c);
+                    String currentWifi = String.format("WiFi: %s Poll Count: %d", name, c);
 
                     Message message = Message.obtain(null, 123);
                     Bundle bundle = new Bundle();
@@ -95,6 +86,7 @@ public class WiFiMonitor extends Service {
                     }
 
                     try {
+                        // TODO: Different mechanism, ScheduledExecutorService or such?
                         Thread.sleep(2000);
                         // Thread.sleep(60000);
                     }
@@ -128,7 +120,7 @@ public class WiFiMonitor extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        _messenger = new Messenger(new IncomingHandler(this));
+        Messenger _messenger = new Messenger(new IncomingHandler(this));
 
         return _messenger.getBinder();
     }

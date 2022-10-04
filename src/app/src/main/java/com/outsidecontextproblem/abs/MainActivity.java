@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -28,23 +27,27 @@ public class MainActivity extends AppCompatActivity {
     private final int BACKGROUND_LOCATION_REQUEST = 2;
 
     private Messenger _serviceMessenger;
-    private Messenger _incomingMessenger = new Messenger(new IncomingHandler());
+    private final Messenger _incomingMessenger = new Messenger(new IncomingHandler(this));
     private boolean _bound;
 
-    private class IncomingHandler extends Handler {
+    private static class IncomingHandler extends Handler {
+        private final MainActivity _mainActivity;
+
+        public IncomingHandler(MainActivity mainActivity) {
+            _mainActivity = mainActivity;
+        }
+
         @Override
         public void handleMessage(Message message) {
-            switch (message.what) {
-                case 123:
-                    updateConnectedWiFi(message.getData().getString("WIFI"));
-
-                    break;
-                default:
-                    super.handleMessage(message);
+            if (message.what == 123) {
+                _mainActivity.updateConnectedWiFi(message.getData().getString("WIFI"));
+            } else {
+                super.handleMessage(message);
             }
         }
     }
-    private ServiceConnection _connection = new ServiceConnection() {
+
+    private final ServiceConnection _connection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             _serviceMessenger = new Messenger(service);
             _bound = true;
@@ -66,36 +69,11 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private CountDownTimer _timer;
-
     @Override
     protected void onStart() {
         super.onStart();
 
         bindService(new Intent(this, WiFiMonitor.class), _connection, Context.BIND_AUTO_CREATE);
-
-//        _timer = new CountDownTimer(Long.MAX_VALUE, 2000) {
-//            @Override
-//            public void onTick(long l) {
-//                if (! _bound) {
-//                    return;
-//                }
-//
-//                Message message = Message.obtain(null, WiFiMonitor.MESSAGE_GET_CURRENT_WIFI, 0, 0);
-//
-//                try {
-//                    _messenger.send(message);
-//                }
-//                catch (RemoteException exception) {
-//                    exception.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void onFinish() {
-//
-//            }
-//        }.start();
     }
 
     @Override
