@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message message) {
             if (message.what == 123) {
-                _mainActivity.updateConnectedWiFi(message.getData().getString("WIFI"));
+                _mainActivity.updateConnectedWiFi(message.getData().getString(WiFiMonitor.MESSAGE_KEY_WIFI_NAME));
             } else {
                 super.handleMessage(message);
             }

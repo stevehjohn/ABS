@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -24,7 +25,15 @@ public class WiFiMonitor extends Service {
 
     public static final int MESSAGE_REGISTER_CLIENT = 1;
 
+    public static final String MESSAGE_KEY_WIFI_NAME = "WIFI";
+
+    private static final String NOTIFICATION_CHANNEL_ID = "com.outsidecontextproblem.abs";
+
+    private static final int POLL_MILLISECONDS = 2_000;
+
     private Messenger _client = null;
+
+    private int _pollCount = 0;
 
     private static class IncomingHandler extends Handler {
         private final WiFiMonitor _wiFiMonitor;
@@ -48,71 +57,31 @@ public class WiFiMonitor extends Service {
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
-    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-        new Thread(
-            () -> {
-                int c = 1;
-
-                while (true) {
-
-                    Log.e("Service", String.format("Polling %d...", c++));
-
-                    WifiManager wifiMgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-                    WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
-                    String name = wifiInfo.getSSID();
-
-                    Log.e("Service", name);
-
-                    String currentWifi = String.format("WiFi: %s Poll Count: %d", name, c);
-
-                    Message message = Message.obtain(null, 123);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("WIFI", currentWifi);
-                    message.setData(bundle);
-
-                    try {
-                        if (_client != null) {
-                            _client.send(message);
-                        }
-                    }
-                    catch (RemoteException exception) {
-                        exception.printStackTrace();
-                    }
-
-                    try {
-                        // TODO: Different mechanism, ScheduledExecutorService or such?
-                        Thread.sleep(2000);
-                        // Thread.sleep(60000);
-                    }
-                    catch (InterruptedException exception) {
-                        exception.printStackTrace();
-                    }
-                }
-            }
-        ).start();
-
-        final String CHANNEL_ID = "com.outsidecontextproblem.abs";
-
         NotificationChannel notificationChannel = new NotificationChannel(
-                CHANNEL_ID,
-                CHANNEL_ID,
+                NOTIFICATION_CHANNEL_ID,
+                NOTIFICATION_CHANNEL_ID,
                 NotificationManager.IMPORTANCE_LOW
         );
 
         getSystemService((NotificationManager.class)).createNotificationChannel(notificationChannel);
 
-        Notification.Builder notificationBuilder = new Notification.Builder(this, CHANNEL_ID)
-                .setContentText("Blah")
-                .setContentTitle("Blah")
+        Notification.Builder notificationBuilder = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
+                .setContentText("Monitoring for WiFi calling designated access points.")
                 .setSmallIcon(R.drawable.ic_launcher_background);
 
         startForeground(1001, notificationBuilder.build());
+
+        new CountDownTimer(Long.MAX_VALUE, POLL_MILLISECONDS) {
+            @Override
+            public void onTick(long l) {
+                doPoll();
+            }
+
+            @Override
+            public void onFinish() {
+            }
+        }.start();
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -123,5 +92,33 @@ public class WiFiMonitor extends Service {
         Messenger _messenger = new Messenger(new IncomingHandler(this));
 
         return _messenger.getBinder();
+    }
+
+    private void doPoll() {
+        _pollCount++;
+
+        Log.i(WiFiMonitor.class.getName(), String.format("Polling %d...", _pollCount));
+
+        WifiManager wifiMgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
+        String name = wifiInfo.getSSID();
+
+        name = name.substring(1, name.length() - 1);
+
+        Log.i(WiFiMonitor.class.getName(), name);
+
+        Message message = Message.obtain(null, 123);
+        Bundle bundle = new Bundle();
+        bundle.putString(MESSAGE_KEY_WIFI_NAME, name);
+        message.setData(bundle);
+
+        try {
+            if (_client != null) {
+                _client.send(message);
+            }
+        }
+        catch (RemoteException exception) {
+            exception.printStackTrace();
+        }
     }
 }
