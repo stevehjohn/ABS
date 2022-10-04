@@ -22,6 +22,8 @@ import androidx.annotation.Nullable;
 import com.outsidecontextproblem.abs.MainActivity;
 import com.outsidecontextproblem.abs.R;
 
+import java.util.ArrayList;
+
 public class WiFiMonitor extends Service {
 
     public static final int MESSAGE_REGISTER_CLIENT = 1;
@@ -41,6 +43,10 @@ public class WiFiMonitor extends Service {
     private Messenger _client = null;
 
     private int _pollCount = 0;
+
+    private final ArrayList<String> _wiFiSSIDs = new ArrayList<>();
+
+    private boolean _wifiCalling = false;
 
     private static class IncomingHandler extends Handler {
         private final WiFiMonitor _wiFiMonitor;
@@ -129,17 +135,31 @@ public class WiFiMonitor extends Service {
         catch (RemoteException exception) {
             exception.printStackTrace();
         }
+
+        if (! _wifiCalling) {
+            if (_wiFiSSIDs.contains(name)) {
+                switchToWiFiCalling();
+            }
+        } else {
+            if (! _wiFiSSIDs.contains(name)) {
+                restoreDefaultRadios();
+            }
+        }
     }
 
     private void switchToWiFiCalling() {
         _notificationBuilder.setContentText("WiFi only mode enabled. Mobile/cellular radio disabled.");
 
         _notificationManager.notify(NOTIFICATION_ID, _notificationBuilder.build());
+
+        _wifiCalling = true;
     }
 
     private void restoreDefaultRadios() {
         _notificationBuilder.setContentText("Monitoring for WiFi calling designated access points.");
 
         _notificationManager.notify(NOTIFICATION_ID, _notificationBuilder.build());
+
+        _wifiCalling = false;
     }
 }
