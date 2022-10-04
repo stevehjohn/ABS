@@ -27,6 +27,8 @@ import java.util.ArrayList;
 public class WiFiMonitor extends Service {
 
     public static final int MESSAGE_REGISTER_CLIENT = 1;
+    public static final int MESSAGE_ADD_WIFI_ONLY_HOTSPOT = 2;
+    public static final int MESSAGE_REMOVE_WIFI_ONLY_HOTSPOT = 3;
 
     public static final String MESSAGE_KEY_WIFI_NAME = "WIFI";
 
@@ -57,10 +59,31 @@ public class WiFiMonitor extends Service {
 
         @Override
         public void handleMessage(Message message) {
-            // noinspection SwitchStatementWithTooFewBranches - Will be adding more
+            String ssid;
+
             switch (message.what) {
                 case MESSAGE_REGISTER_CLIENT:
                     _wiFiMonitor._client = message.replyTo;
+
+                    break;
+                case MESSAGE_ADD_WIFI_ONLY_HOTSPOT:
+                    ssid = message.getData().getString("");
+
+                    if (! _wiFiMonitor._wiFiSSIDs.contains(ssid)) {
+                        _wiFiMonitor._wiFiSSIDs.add(ssid);
+
+                        // TODO: Save wiFiSSIDs
+                    }
+
+                    break;
+                case MESSAGE_REMOVE_WIFI_ONLY_HOTSPOT:
+                    ssid = message.getData().getString("");
+
+                    if (! _wiFiMonitor._wiFiSSIDs.contains(ssid)) {
+                        _wiFiMonitor._wiFiSSIDs.remove(ssid);
+
+                        // TODO: Save wiFiSSIDs
+                    }
 
                     break;
                 default:
