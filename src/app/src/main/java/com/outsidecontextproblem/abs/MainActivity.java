@@ -6,12 +6,17 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.ActivityManager;
-import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.widget.TextView;
 
 import com.outsidecontextproblem.abs.services.WiFiMonitor;
@@ -21,10 +26,46 @@ public class MainActivity extends AppCompatActivity {
     private final int FINE_LOCATION_REQUEST = 1;
     private final int BACKGROUND_LOCATION_REQUEST = 2;
 
-    BroadcastReceiver _broadcastReceiver = new BroadcastReceiver() {
+    private Messenger _serviceMessenger;
+    private final Messenger _incomingMessenger = new Messenger(new IncomingHandler(this));
+    private boolean _bound;
+
+    private static class IncomingHandler extends Handler {
+        private final MainActivity _mainActivity;
+
+        public IncomingHandler(MainActivity mainActivity) {
+            _mainActivity = mainActivity;
+        }
+
         @Override
-        public void onReceive(Context context, Intent intent) {
-            updateConnectedWiFi(intent.getStringExtra("Thingy"));
+        public void handleMessage(Message message) {
+            if (message.what == 123) {
+                _mainActivity.updateConnectedWiFi(message.getData().getString("WIFI"));
+            } else {
+                super.handleMessage(message);
+            }
+        }
+    }
+
+    private final ServiceConnection _connection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            _serviceMessenger = new Messenger(service);
+            _bound = true;
+
+            Message message = Message.obtain(null, WiFiMonitor.MESSAGE_REGISTER_CLIENT);
+            message.replyTo = _incomingMessenger;
+
+            try {
+                _serviceMessenger.send(message);
+            }
+            catch (RemoteException exception) {
+                exception.printStackTrace();
+            }
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            _serviceMessenger = null;
+            _bound = false;
         }
     };
 
@@ -32,10 +73,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("com.outsidecontextproblem.abs");
+        bindService(new Intent(this, WiFiMonitor.class), _connection, Context.BIND_AUTO_CREATE);
+    }
 
-        registerReceiver(_broadcastReceiver, intentFilter);
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (_bound) {
+            unbindService(_connection);
+            _bound = false;
+        }
     }
 
     @Override

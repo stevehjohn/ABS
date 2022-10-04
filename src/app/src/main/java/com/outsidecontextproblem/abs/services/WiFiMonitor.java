@@ -8,7 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -16,6 +21,31 @@ import androidx.annotation.Nullable;
 import com.outsidecontextproblem.abs.R;
 
 public class WiFiMonitor extends Service {
+
+    public static final int MESSAGE_REGISTER_CLIENT = 1;
+
+    private Messenger _client = null;
+
+    private static class IncomingHandler extends Handler {
+        private final WiFiMonitor _wiFiMonitor;
+
+        IncomingHandler(WiFiMonitor wiFiMonitor) {
+            _wiFiMonitor = wiFiMonitor;
+        }
+
+        @Override
+        public void handleMessage(Message message) {
+            // noinspection SwitchStatementWithTooFewBranches - Will be adding more
+            switch (message.what) {
+                case MESSAGE_REGISTER_CLIENT:
+                    _wiFiMonitor._client = message.replyTo;
+
+                    break;
+                default:
+                    super.handleMessage(message);
+            }
+        }
+    }
 
     @Override
     public void onCreate() {
@@ -39,13 +69,24 @@ public class WiFiMonitor extends Service {
 
                     Log.e("Service", name);
 
-                    Intent broadcastIntent = new Intent();
-                    broadcastIntent.setAction("com.outsidecontextproblem.abs");
-                    broadcastIntent.putExtra("Thingy", String.format("%s %d", name, c));
+                    String currentWifi = String.format("WiFi: %s Poll Count: %d", name, c);
 
-                    sendBroadcast(broadcastIntent);
+                    Message message = Message.obtain(null, 123);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("WIFI", currentWifi);
+                    message.setData(bundle);
 
                     try {
+                        if (_client != null) {
+                            _client.send(message);
+                        }
+                    }
+                    catch (RemoteException exception) {
+                        exception.printStackTrace();
+                    }
+
+                    try {
+                        // TODO: Different mechanism, ScheduledExecutorService or such?
                         Thread.sleep(2000);
                         // Thread.sleep(60000);
                     }
@@ -79,6 +120,8 @@ public class WiFiMonitor extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        Messenger _messenger = new Messenger(new IncomingHandler(this));
+
+        return _messenger.getBinder();
     }
 }
