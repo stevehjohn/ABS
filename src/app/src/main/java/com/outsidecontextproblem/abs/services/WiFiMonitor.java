@@ -105,7 +105,7 @@ public class WiFiMonitor extends Service {
         _notificationManager.createNotificationChannel(notificationChannel);
 
         _notificationBuilder = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
-                .setContentText("Monitoring for WiFi calling designated access points.")
+                .setContentText(getResources().getString(R.string.notification_monitoring))
                 .setSmallIcon(R.drawable.ic_launcher_background);
 
         startForeground(NOTIFICATION_ID, _notificationBuilder.build());
@@ -171,7 +171,7 @@ public class WiFiMonitor extends Service {
     }
 
     private void switchToWiFiCalling() {
-        _notificationBuilder.setContentText("WiFi only mode enabled. Mobile/cellular radio disabled.");
+        _notificationBuilder.setContentText(getResources().getString(R.string.notification_wifi_only));
 
         _notificationManager.notify(NOTIFICATION_ID, _notificationBuilder.build());
 
@@ -179,7 +179,7 @@ public class WiFiMonitor extends Service {
     }
 
     private void restoreDefaultRadios() {
-        _notificationBuilder.setContentText("Monitoring for WiFi calling designated access points.");
+        _notificationBuilder.setContentText(getResources().getString(R.string.notification_monitoring));
 
         _notificationManager.notify(NOTIFICATION_ID, _notificationBuilder.build());
 
