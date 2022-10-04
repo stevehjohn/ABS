@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private final int FINE_LOCATION_REQUEST = 1;
     private final int BACKGROUND_LOCATION_REQUEST = 2;
 
+    public static final int MESSAGE_WIFI_SSID = 1;
+
     private Messenger _serviceMessenger;
     private final Messenger _incomingMessenger = new Messenger(new IncomingHandler(this));
     private boolean _bound;
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void handleMessage(Message message) {
-            if (message.what == 123) {
+            if (message.what == MESSAGE_WIFI_SSID) {
                 _mainActivity.updateConnectedWiFi(message.getData().getString(WiFiMonitor.MESSAGE_KEY_WIFI_NAME));
             } else {
                 super.handleMessage(message);

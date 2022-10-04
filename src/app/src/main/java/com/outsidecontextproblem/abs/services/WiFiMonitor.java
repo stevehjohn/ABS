@@ -19,6 +19,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.outsidecontextproblem.abs.MainActivity;
 import com.outsidecontextproblem.abs.R;
 
 public class WiFiMonitor extends Service {
@@ -107,7 +108,7 @@ public class WiFiMonitor extends Service {
 
         Log.i(WiFiMonitor.class.getName(), name);
 
-        Message message = Message.obtain(null, 123);
+        Message message = Message.obtain(null, MainActivity.MESSAGE_WIFI_SSID);
         Bundle bundle = new Bundle();
         bundle.putString(MESSAGE_KEY_WIFI_NAME, name);
         message.setData(bundle);
