@@ -80,7 +80,7 @@ public class WiFiMonitor extends Service {
                 case MESSAGE_REMOVE_WIFI_ONLY_HOTSPOT:
                     ssid = message.getData().getString(MESSAGE_KEY_WIFI_NAME);
 
-                    if (! _wiFiMonitor._wiFiSSIDs.contains(ssid)) {
+                    if (_wiFiMonitor._wiFiSSIDs.contains(ssid)) {
                         _wiFiMonitor._wiFiSSIDs.remove(ssid);
 
                         // TODO: Save wiFiSSIDs
