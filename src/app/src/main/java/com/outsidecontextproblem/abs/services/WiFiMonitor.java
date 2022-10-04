@@ -34,6 +34,10 @@ public class WiFiMonitor extends Service {
 
     private static final int NOTIFICATION_ID = 824954302;
 
+    private NotificationManager _notificationManager;
+
+    private Notification.Builder _notificationBuilder;
+
     private Messenger _client = null;
 
     private int _pollCount = 0;
@@ -67,13 +71,15 @@ public class WiFiMonitor extends Service {
                 NotificationManager.IMPORTANCE_LOW
         );
 
-        getSystemService((NotificationManager.class)).createNotificationChannel(notificationChannel);
+        _notificationManager = getSystemService((NotificationManager.class));
 
-        Notification.Builder notificationBuilder = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
+        _notificationManager.createNotificationChannel(notificationChannel);
+
+        _notificationBuilder = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
                 .setContentText("Monitoring for WiFi calling designated access points.")
                 .setSmallIcon(R.drawable.ic_launcher_background);
 
-        startForeground(NOTIFICATION_ID, notificationBuilder.build());
+        startForeground(NOTIFICATION_ID, _notificationBuilder.build());
 
         new CountDownTimer(Long.MAX_VALUE, POLL_MILLISECONDS) {
             @Override
@@ -123,5 +129,17 @@ public class WiFiMonitor extends Service {
         catch (RemoteException exception) {
             exception.printStackTrace();
         }
+    }
+
+    private void switchToWiFiCalling() {
+        _notificationBuilder.setContentText("WiFi only mode enabled. Mobile/cellular radio disabled.");
+
+        _notificationManager.notify(NOTIFICATION_ID, _notificationBuilder.build());
+    }
+
+    private void restoreDefaultRadios() {
+        _notificationBuilder.setContentText("Monitoring for WiFi calling designated access points.");
+
+        _notificationManager.notify(NOTIFICATION_ID, _notificationBuilder.build());
     }
 }
