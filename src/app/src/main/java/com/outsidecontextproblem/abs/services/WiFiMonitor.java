@@ -32,6 +32,8 @@ public class WiFiMonitor extends Service {
 
     private static final int POLL_MILLISECONDS = 2_000;
 
+    private static final int NOTIFICATION_ID = 824954302;
+
     private Messenger _client = null;
 
     private int _pollCount = 0;
@@ -71,7 +73,7 @@ public class WiFiMonitor extends Service {
                 .setContentText("Monitoring for WiFi calling designated access points.")
                 .setSmallIcon(R.drawable.ic_launcher_background);
 
-        startForeground(1001, notificationBuilder.build());
+        startForeground(NOTIFICATION_ID, notificationBuilder.build());
 
         new CountDownTimer(Long.MAX_VALUE, POLL_MILLISECONDS) {
             @Override
