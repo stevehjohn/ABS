@@ -2,4 +2,7 @@
     <string name="app_name">Android Battery Saver</string>
     <string name="notification_monitoring">Monitoring for WiFi calling designated access points.</string>
     <string name="notification_wifi_only">WiFi only mode enabled. Mobile/cellular radio disabled.</string>
+    <string name="ui_main_current_wifi">Current WiFi Network</string>
+    <string name="ui_main_searching">Searching...</string>
+    <string name="ui_main_hotspots">WiFi Only Calling Hotspots</string>
 </resources>
