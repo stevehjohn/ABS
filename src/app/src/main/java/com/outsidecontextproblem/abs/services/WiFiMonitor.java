@@ -16,6 +16,8 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.provider.Settings;
+import android.support.v4.os.IResultReceiver;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -160,10 +162,8 @@ public class WiFiMonitor extends Service {
     private void setWiFiOnlyState(boolean state) {
         Log.i(WiFiMonitor.class.getName(), String.format("Request to change WiFi state: %b", state));
 
-        Settings.System.putInt(getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, state ? 1 : 0);
-
-        Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
-        sendBroadcast(intent);
+        // Here, we fail :(
+        // Cannot disable cellular from a non-system app.
     }
 
     private void returnHotspots() {
