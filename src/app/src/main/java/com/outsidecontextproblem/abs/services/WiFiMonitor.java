@@ -162,8 +162,11 @@ public class WiFiMonitor extends Service {
     private void setWiFiOnlyState(boolean state) {
         Log.i(WiFiMonitor.class.getName(), String.format("Request to change WiFi state: %b", state));
 
-        // Here, we fail :(
-        // Cannot disable cellular from a non-system app.
+        if (state) {
+            switchToWiFiCalling();
+        } else {
+            restoreDefaultRadios();
+        }
     }
 
     private void returnHotspots() {
@@ -228,6 +231,8 @@ public class WiFiMonitor extends Service {
         }
     }
 
+    // Here, we fail :(
+    // Cannot disable cellular from a non-system app.
     private void switchToWiFiCalling() {
         _notificationBuilder.setContentText(getResources().getString(R.string.notification_wifi_only));
 
