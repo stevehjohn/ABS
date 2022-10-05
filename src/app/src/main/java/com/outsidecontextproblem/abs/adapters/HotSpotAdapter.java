@@ -54,4 +54,8 @@ public class HotSpotAdapter extends RecyclerView.Adapter<HotSpotAdapter.ViewHold
         }
         return _hotspots.size();
     }
+
+    public void deleteItem(int position) {
+        _hotspots.remove(position);
+    }
 }

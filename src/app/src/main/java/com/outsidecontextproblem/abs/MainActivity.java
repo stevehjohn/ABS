@@ -3,6 +3,7 @@ package com.outsidecontextproblem.abs;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +24,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.outsidecontextproblem.abs.adapters.HotSpotAdapter;
+import com.outsidecontextproblem.abs.helpers.SwipeToDeleteCallback;
 import com.outsidecontextproblem.abs.services.WiFiMonitor;
 
 import java.util.ArrayList;
@@ -141,6 +143,8 @@ public class MainActivity extends AppCompatActivity {
         recycler.setLayoutManager(new LinearLayoutManager(this));
         _hotSpotAdapter = new HotSpotAdapter(_hotspots);
         recycler.setAdapter(_hotSpotAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(_hotSpotAdapter));
+        itemTouchHelper.attachToRecyclerView(recycler);
     }
 
     @Override
