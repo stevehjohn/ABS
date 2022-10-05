@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView _recyclerView;
     private Button _addButton;
     private Switch _wiFiOnlySwitch;
+    private Button _overrideCancel;
 
     private static class IncomingHandler extends Handler {
         private final MainActivity _mainActivity;
@@ -169,6 +170,9 @@ public class MainActivity extends AppCompatActivity {
 
         _wiFiOnlySwitch = findViewById(R.id.switchWiFiOnly);
         _wiFiOnlySwitch.setOnCheckedChangeListener((view, newState) -> changeWiFiOnlyState(newState));
+
+        _overrideCancel = findViewById(R.id.buttonCancelOverride);
+        _overrideCancel.setOnClickListener(view -> cancelOverride());
     }
 
     @Override
@@ -202,6 +206,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent serviceIntent = new Intent(this, WiFiMonitor.class);
                 startForegroundService(serviceIntent);
         }
+    }
+
+    private void cancelOverride() {
+        setOverrideVisibility(false);
     }
 
     private void setOverrideVisibility(boolean visibility) {
