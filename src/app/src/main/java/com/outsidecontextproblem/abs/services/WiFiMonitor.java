@@ -76,7 +76,7 @@ public class WiFiMonitor extends Service {
                 case MESSAGE_REGISTER_CLIENT:
                     _wiFiMonitor._client = message.replyTo;
 
-                    _wiFiMonitor.doPoll();
+                    //_wiFiMonitor.doPoll();
 
                     break;
                 case MESSAGE_ADD_WIFI_ONLY_HOTSPOT:
