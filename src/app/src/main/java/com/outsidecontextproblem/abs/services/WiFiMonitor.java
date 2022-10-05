@@ -196,8 +196,6 @@ public class WiFiMonitor extends Service {
             Log.i(WiFiMonitor.class.getName(), "null");
         }
 
-        name = UUID.randomUUID().toString();
-
         Message message = Message.obtain(null, MainActivity.MESSAGE_WIFI_SSID);
         Bundle bundle = new Bundle();
         bundle.putString(MESSAGE_KEY_WIFI_NAME, name);
