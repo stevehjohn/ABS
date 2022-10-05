@@ -24,6 +24,7 @@ import com.outsidecontextproblem.abs.R;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.UUID;
 
 public class WiFiMonitor extends Service {
 
@@ -40,7 +41,7 @@ public class WiFiMonitor extends Service {
 
     private static final String NOTIFICATION_CHANNEL_ID = "com.outsidecontextproblem.abs";
 
-    private static final int POLL_MILLISECONDS = 30_000;
+    private static final int POLL_MILLISECONDS = 2_000;
 
     private static final int NOTIFICATION_ID = 824954302;
 
@@ -194,6 +195,8 @@ public class WiFiMonitor extends Service {
         } else {
             Log.i(WiFiMonitor.class.getName(), "null");
         }
+
+        name = UUID.randomUUID().toString();
 
         Message message = Message.obtain(null, MainActivity.MESSAGE_WIFI_SSID);
         Bundle bundle = new Bundle();

@@ -271,10 +271,20 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        _hotspots.add(0, _currentHotSpot);
+        int index = 0;
 
-        _hotSpotAdapter.notifyItemInserted(0);
+        for (String hotspot: _hotspots) {
+            if (_currentHotSpot.compareTo(hotspot) < 0) {
+                break;
+            }
 
-        _recyclerView.scrollToPosition(0);
+            index++;
+        }
+
+        _hotspots.add(index, _currentHotSpot);
+
+        _hotSpotAdapter.notifyItemInserted(index);
+
+        _recyclerView.scrollToPosition(index);
     }
 }
