@@ -31,9 +31,12 @@ public class WiFiMonitor extends Service {
     public static final int MESSAGE_ADD_WIFI_ONLY_HOTSPOT = 2;
     public static final int MESSAGE_REMOVE_WIFI_ONLY_HOTSPOT = 3;
     public static final int MESSAGE_GET_WIFI_ONLY_HOTSPOTS = 4;
+    public static final int MESSAGE_GET_WIFI_ONLY_STATE = 5;
+    public static final int MESSAGE_SET_WIFI_ONLY_STATE = 6;
 
     public static final String MESSAGE_KEY_WIFI_NAME = "WIFI";
     public static final String MESSAGE_KEY_WIFI_HOTSPOTS = "WIFI_HOTSPOTS";
+    public static final String MESSAGE_KEY_WIFI_ONLY_STATE = "WIFI_ONLY_STATE";
 
     private static final String NOTIFICATION_CHANNEL_ID = "com.outsidecontextproblem.abs";
 
@@ -93,6 +96,12 @@ public class WiFiMonitor extends Service {
                     _wiFiMonitor.returnHotspots();
 
                     break;
+                case MESSAGE_SET_WIFI_ONLY_STATE:
+                    boolean state = message.getData().getBoolean(MESSAGE_KEY_WIFI_ONLY_STATE);
+
+                    _wiFiMonitor.setWiFiOnlyState(state);
+
+                    break;
                 default:
                     super.handleMessage(message);
             }
@@ -139,14 +148,11 @@ public class WiFiMonitor extends Service {
         return _messenger.getBinder();
     }
 
-    private void returnHotspots() {
-        // TEST CODE - REMOVE!!!
-        if (_wiFiSSIDs.isEmpty()) {
-            for (int i = 0; i < 100; i++) {
-                _wiFiSSIDs.add(String.format("BTHub-%03d", i));
-            }
-        }
+    private void setWiFiOnlyState(boolean state) {
 
+    }
+
+    private void returnHotspots() {
         Message message = Message.obtain(null, MainActivity.MESSAGE_WIFI_HOTSPOTS);
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(MESSAGE_KEY_WIFI_HOTSPOTS, _wiFiSSIDs);

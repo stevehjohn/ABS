@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int MESSAGE_WIFI_SSID = 1;
     public static final int MESSAGE_WIFI_HOTSPOTS = 2;
+    public static final int MESSAGE_WIFI_ONLY_STATE_CHANGED = 3;
 
     private Messenger _serviceMessenger;
     private final Messenger _incomingMessenger = new Messenger(new IncomingHandler(this));
@@ -70,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
                     _mainActivity.showHotspots(hotspots);
 
+                    break;
+                case MESSAGE_WIFI_ONLY_STATE_CHANGED:
+                    
                     break;
                 default:
                     super.handleMessage(message);
