@@ -21,7 +21,6 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -155,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         itemTouchHelper.attachToRecyclerView(_recyclerView);
 
         _addButton = findViewById(R.id.buttonAdd);
-        _addButton.setOnClickListener(view -> AddCurrentWifiHotSpot());
+        _addButton.setOnClickListener(view -> addCurrentWifiHotSpot());
     }
 
     @Override
@@ -240,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    private void AddCurrentWifiHotSpot() {
+    private void addCurrentWifiHotSpot() {
         if (_hotspots.contains(_currentHotSpot)) {
             Snackbar snackbar = Snackbar.make(_recyclerView, String.format(getResources().getString(R.string.hotspot_exists), _currentHotSpot), Snackbar.LENGTH_LONG);
             snackbar.setAnimationMode(Snackbar.ANIMATION_MODE_FADE);
