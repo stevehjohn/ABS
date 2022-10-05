@@ -17,6 +17,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.outsidecontextproblem.abs.services.WiFiMonitor;
@@ -75,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
             catch (RemoteException exception) {
                 exception.printStackTrace();
             }
+
+            requestConfiguredHotspots();
         }
 
         public void onServiceDisconnected(ComponentName className) {
@@ -88,8 +91,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         bindService(new Intent(this, WiFiMonitor.class), _connection, Context.BIND_AUTO_CREATE);
-
-        requestConfiguredHotspots();
     }
 
     @Override
@@ -176,7 +177,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showHotspots(ArrayList<String> hotspots) {
-
+        for (String hotspot: hotspots) {
+            Log.i(MainActivity.class.getName(), hotspot);
+        }
     }
 
     private void updateConnectedWiFi(String wiFiName) {
