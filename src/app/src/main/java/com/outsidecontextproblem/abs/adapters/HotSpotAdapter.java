@@ -86,5 +86,9 @@ public class HotSpotAdapter extends RecyclerView.Adapter<HotSpotAdapter.ViewHold
         _hotspots.add(_deletedPosition, _deletedItem);
 
         notifyItemInserted(_deletedPosition);
+
+        RecyclerView view = _activity.findViewById(R.id.recyclerHotspots);
+
+        view.scrollToPosition(_deletedPosition);
     }
 }

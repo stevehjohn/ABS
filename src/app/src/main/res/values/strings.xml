@@ -9,4 +9,6 @@
     <string name="undo">Undo</string>
     <string name="add_button">+</string>
     <string name="hotspot_exists">%s already added</string>
+    <string name="wifi_only_on">WiFi Only Calling is On</string>
+    <string name="wifi_only_off">WiFi Only Calling is Off</string>
 </resources>
