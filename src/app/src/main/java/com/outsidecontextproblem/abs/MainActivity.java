@@ -3,6 +3,8 @@ package com.outsidecontextproblem.abs;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.ActivityManager;
@@ -20,6 +22,7 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.outsidecontextproblem.abs.adapters.HotSpotAdapter;
 import com.outsidecontextproblem.abs.services.WiFiMonitor;
 
 import java.util.ArrayList;
@@ -35,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
     private Messenger _serviceMessenger;
     private final Messenger _incomingMessenger = new Messenger(new IncomingHandler(this));
     private boolean _bound;
+
+    private final ArrayList<String> _hotspots = new ArrayList<>();
+    private HotSpotAdapter _hotSpotAdapter;
 
     private static class IncomingHandler extends Handler {
         private final MainActivity _mainActivity;
@@ -130,6 +136,11 @@ public class MainActivity extends AppCompatActivity {
                 startForegroundService(serviceIntent);
             }
         }
+
+        RecyclerView recycler = findViewById(R.id.recyclerHotspots);
+        recycler.setLayoutManager(new LinearLayoutManager(this));
+        _hotSpotAdapter = new HotSpotAdapter(_hotspots);
+        recycler.setAdapter(_hotSpotAdapter);
     }
 
     @Override
@@ -179,7 +190,11 @@ public class MainActivity extends AppCompatActivity {
     private void showHotspots(ArrayList<String> hotspots) {
         for (String hotspot: hotspots) {
             Log.i(MainActivity.class.getName(), hotspot);
+
+            _hotspots.add(hotspot);
         }
+
+        _hotSpotAdapter.notifyDataSetChanged();
     }
 
     private void updateConnectedWiFi(String wiFiName) {

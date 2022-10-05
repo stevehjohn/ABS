@@ -23,6 +23,7 @@ import com.outsidecontextproblem.abs.MainActivity;
 import com.outsidecontextproblem.abs.R;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class WiFiMonitor extends Service {
 
@@ -141,8 +142,9 @@ public class WiFiMonitor extends Service {
     private void returnHotspots() {
         // TEST CODE - REMOVE!!!
         if (_wiFiSSIDs.isEmpty()) {
-            _wiFiSSIDs.add("BTHub-1234");
-            _wiFiSSIDs.add("BTHub-5678");
+            for (int i = 0; i < 100; i++) {
+                _wiFiSSIDs.add(String.format("BTHub-%03d", i));
+            }
         }
 
         Message message = Message.obtain(null, MainActivity.MESSAGE_WIFI_HOTSPOTS);

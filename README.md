@@ -13,3 +13,7 @@ I found this extended my phone's battery life from barely a day, to _1 week_!
 This app will allow you to specify certain WiFi access points where you always want to use WiFi calling.
 
 When it detects you are connected to one, it will perform the Airplane mode, re-enable WiFi/Bluetooth procedure automatically. When you disconnect, it reverts the phone to normal usage.
+
+## TODO List
+
+- Modify dimensions in text_row_item.xml to come from dimens.xml
