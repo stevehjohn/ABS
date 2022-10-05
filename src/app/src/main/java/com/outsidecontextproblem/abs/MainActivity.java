@@ -235,8 +235,8 @@ public class MainActivity extends AppCompatActivity {
     private void changeWiFiOnlyState(boolean state) {
         TextView text = findViewById(R.id.textWiFiOnly);
         text.setText(state
-                ? getResources().getString(R.string.wifi_only_on)
-                : getResources().getString(R.string.wifi_only_off));
+            ? getResources().getString(R.string.wifi_only_on)
+            : getResources().getString(R.string.wifi_only_off));
 
         Message message = Message.obtain(null, WiFiMonitor.MESSAGE_SET_WIFI_ONLY_STATE);
         Bundle bundle = new Bundle();
