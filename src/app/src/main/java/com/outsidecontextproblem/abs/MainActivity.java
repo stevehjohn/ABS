@@ -135,15 +135,15 @@ public class MainActivity extends AppCompatActivity {
         if (! serviceIsRunning()) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]
-                        {
-                                Manifest.permission.ACCESS_FINE_LOCATION
-                        }, FINE_LOCATION_REQUEST);
+                {
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                }, FINE_LOCATION_REQUEST);
             } else {
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(this, new String[]
-                            {
-                                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                            }, BACKGROUND_LOCATION_REQUEST);
+                    {
+                        Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                    }, BACKGROUND_LOCATION_REQUEST);
                 }
             }
 
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(this, new String[]
                     {
-                            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                        Manifest.permission.ACCESS_BACKGROUND_LOCATION
                     }, BACKGROUND_LOCATION_REQUEST);
                 }
 
