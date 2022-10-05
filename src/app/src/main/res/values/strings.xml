@@ -11,4 +11,6 @@
     <string name="hotspot_exists">%s already added</string>
     <string name="wifi_only_on">WiFi Only Calling is On</string>
     <string name="wifi_only_off">WiFi Only Calling is Off</string>
+    <string name="cancel">Cancel</string>
+    <string name="manually_overridden">Manually Overridden</string>
 </resources>
