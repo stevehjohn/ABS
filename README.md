@@ -17,3 +17,7 @@ When it detects you are connected to one, it will perform the Airplane mode, re-
 ## What's with all the permission requests?
 
 Unfortunately, to get WiFi network names Android requires location permissions. As this service monitors in the background, it also needs the permission even when the app UI isn't running. Lastly, Android forces you to show a notification for a contiunally running service.
+
+# TODOs
+
+- Pop-up explaining why permissions are required if a user denies them.
