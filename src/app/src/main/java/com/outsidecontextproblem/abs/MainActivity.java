@@ -22,6 +22,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -73,7 +74,10 @@ public class MainActivity extends AppCompatActivity {
 
                     break;
                 case MESSAGE_WIFI_ONLY_STATE_CHANGED:
-                    
+                    boolean state = message.getData().getBoolean(WiFiMonitor.MESSAGE_KEY_WIFI_ONLY_STATE);
+
+                    _mainActivity.wiFiOnlyStateChanged(state);
+
                     break;
                 default:
                     super.handleMessage(message);
@@ -192,6 +196,16 @@ public class MainActivity extends AppCompatActivity {
                 Intent serviceIntent = new Intent(this, WiFiMonitor.class);
                 startForegroundService(serviceIntent);
         }
+    }
+
+    private void wiFiOnlyStateChanged(boolean state) {
+        Switch toggle = findViewById(R.id.switchWiFiOnly);
+        toggle.setChecked(state);
+
+        TextView text = findViewById(R.id.textWiFiOnly);
+        text.setText(state
+            ? getResources().getString(R.string.wifi_only_on)
+            : getResources().getString(R.string.wifi_only_off));
     }
 
     private void requestConfiguredHotspots() {
