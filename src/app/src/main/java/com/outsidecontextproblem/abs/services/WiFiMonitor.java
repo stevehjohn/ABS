@@ -60,6 +60,8 @@ public class WiFiMonitor extends Service {
 
     private boolean _wifiCalling = false;
 
+    private boolean _overridden = false;
+
     private static class IncomingHandler extends Handler {
         private final WiFiMonitor _wiFiMonitor;
 
@@ -162,6 +164,8 @@ public class WiFiMonitor extends Service {
     private void setWiFiOnlyState(boolean state) {
         Log.i(WiFiMonitor.class.getName(), String.format("Request to change WiFi state: %b", state));
 
+        _overridden = true;
+
         if (state) {
             switchToWiFiCalling();
         } else {
@@ -220,13 +224,15 @@ public class WiFiMonitor extends Service {
             exception.printStackTrace();
         }
 
-        if (! _wifiCalling) {
-            if (_wiFiSSIDs.contains(name)) {
-                switchToWiFiCalling();
-            }
-        } else {
-            if (! _wiFiSSIDs.contains(name)) {
-                restoreDefaultRadios();
+        if (! _overridden){
+            if (! _wifiCalling) {
+                if (_wiFiSSIDs.contains(name)) {
+                    switchToWiFiCalling();
+                }
+            } else {
+                if (! _wiFiSSIDs.contains(name)) {
+                    restoreDefaultRadios();
+                }
             }
         }
     }
