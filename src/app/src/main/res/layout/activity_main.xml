@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     tools:context=".MainActivity">
 
     <TextView
@@ -68,7 +69,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider2" />
+        app:layout_constraintTop_toBottomOf="@id/dividerOverriddenEnd" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerHotspots"
@@ -95,11 +96,12 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <View
-        android:id="@+id/divider2"
+        android:id="@+id/dividerOverriddenEnd"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginTop="16dp"
         android:background="?android:attr/listDivider"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/buttonCancelOverride"
         tools:layout_editor_absoluteX="0dp" />
 
@@ -139,17 +141,19 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:text="@string/cancel"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/divider3" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/textViewOverridden"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:text="@string/manually_overridden"
         android:textSize="24sp"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider3" />
 

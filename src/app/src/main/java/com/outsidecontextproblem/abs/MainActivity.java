@@ -21,10 +21,12 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.google.android.material.divider.MaterialDivider;
 import com.google.android.material.snackbar.Snackbar;
 import com.outsidecontextproblem.abs.adapters.HotSpotAdapter;
 import com.outsidecontextproblem.abs.helpers.SwipeToDeleteCallback;
@@ -202,6 +204,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void setOverrideVisibility(boolean visibility) {
+        TextView textView = findViewById(R.id.textViewOverridden);
+        textView.setVisibility(visibility ? View.VISIBLE : View.GONE);
+
+        Button button = findViewById(R.id.buttonCancelOverride);
+        button.setVisibility(visibility ? View.VISIBLE : View.GONE);
+
+        View divider = findViewById(R.id.dividerOverriddenEnd);
+        divider.setVisibility(visibility ? View.VISIBLE : View.GONE);
+    }
+
     private void wiFiOnlyStateChanged(boolean state) {
         _wiFiOnlySwitch.setChecked(state);
 
@@ -228,6 +241,8 @@ public class MainActivity extends AppCompatActivity {
         catch (RemoteException exception) {
             exception.printStackTrace();
         }
+
+        setOverrideVisibility(true);
     }
 
     private void requestConfiguredHotspots() {
