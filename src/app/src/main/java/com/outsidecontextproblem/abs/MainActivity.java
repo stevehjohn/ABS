@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.outsidecontextproblem.abs.adapters.HotSpotAdapter;
 import com.outsidecontextproblem.abs.helpers.SwipeToDeleteCallback;
 import com.outsidecontextproblem.abs.services.WiFiMonitor;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private String _currentHotSpot;
 
     private RecyclerView _recyclerView;
+    private Button _addButton;
 
     private static class IncomingHandler extends Handler {
         private final MainActivity _mainActivity;
@@ -152,8 +154,8 @@ public class MainActivity extends AppCompatActivity {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(_hotSpotAdapter));
         itemTouchHelper.attachToRecyclerView(_recyclerView);
 
-        Button addButton = findViewById(R.id.buttonAdd);
-        addButton.setOnClickListener(view -> AddCurrentWifiHotSpot());
+        _addButton = findViewById(R.id.buttonAdd);
+        _addButton.setOnClickListener(view -> AddCurrentWifiHotSpot());
     }
 
     @Override
@@ -212,6 +214,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateConnectedWiFi(String wiFiName) {
         TextView textView = findViewById(R.id.textViewWiFiName);
+
+        if (wiFiName == null) {
+            textView.setText(R.string.ui_main_searching);
+            _addButton.setEnabled(false);
+            return;
+        }
+
+        _addButton.setEnabled(true);
+
         textView.setText(wiFiName);
 
         _currentHotSpot = wiFiName;
@@ -230,10 +241,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void AddCurrentWifiHotSpot() {
+        if (_hotspots.contains(_currentHotSpot)) {
+            Snackbar snackbar = Snackbar.make(_recyclerView, String.format(getResources().getString(R.string.hotspot_exists), _currentHotSpot), Snackbar.LENGTH_LONG);
+            snackbar.setAnimationMode(Snackbar.ANIMATION_MODE_FADE);
+            snackbar.show();
+
+            _recyclerView.scrollToPosition(_hotspots.indexOf(_currentHotSpot));
+
+            return;
+        }
+
         _hotspots.add(0, _currentHotSpot);
 
         _hotSpotAdapter.notifyItemInserted(0);
-        
+
         _recyclerView.scrollToPosition(0);
     }
 }

@@ -171,9 +171,17 @@ public class WiFiMonitor extends Service {
         WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
         String name = wifiInfo.getSSID();
 
-        name = name.substring(1, name.length() - 1);
+        if (name != null) {
+            Log.i(WiFiMonitor.class.getName(), name);
 
-        Log.i(WiFiMonitor.class.getName(), name);
+            if (name.startsWith("<")) {
+                name = null;
+            } else if (name.startsWith("\"")) {
+                name = name.substring(1, name.length() - 1);
+            }
+        } else {
+            Log.i(WiFiMonitor.class.getName(), "null");
+        }
 
         Message message = Message.obtain(null, MainActivity.MESSAGE_WIFI_SSID);
         Bundle bundle = new Bundle();

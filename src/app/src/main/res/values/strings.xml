@@ -8,4 +8,5 @@
     <string name="hotspot_deleted">%s deleted</string>
     <string name="undo">Undo</string>
     <string name="add_button">+</string>
+    <string name="hotspot_exists">%s already added</string>
 </resources>
