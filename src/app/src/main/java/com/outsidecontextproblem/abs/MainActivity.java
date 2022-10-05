@@ -21,12 +21,15 @@ import android.widget.TextView;
 
 import com.outsidecontextproblem.abs.services.WiFiMonitor;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     private final int FINE_LOCATION_REQUEST = 1;
     private final int BACKGROUND_LOCATION_REQUEST = 2;
 
     public static final int MESSAGE_WIFI_SSID = 1;
+    public static final int MESSAGE_WIFI_HOTSPOTS = 2;
 
     private Messenger _serviceMessenger;
     private final Messenger _incomingMessenger = new Messenger(new IncomingHandler(this));
@@ -41,10 +44,19 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void handleMessage(Message message) {
-            if (message.what == MESSAGE_WIFI_SSID) {
-                _mainActivity.updateConnectedWiFi(message.getData().getString(WiFiMonitor.MESSAGE_KEY_WIFI_NAME));
-            } else {
-                super.handleMessage(message);
+            switch (message.what) {
+                case MESSAGE_WIFI_SSID:
+                    _mainActivity.updateConnectedWiFi(message.getData().getString(WiFiMonitor.MESSAGE_KEY_WIFI_NAME));
+
+                    break;
+                case MESSAGE_WIFI_HOTSPOTS:
+                    ArrayList<String> hotspots = message.getData().getStringArrayList(WiFiMonitor.MESSAGE_KEY_WIFI_HOTSPOTS);
+
+                    _mainActivity.showHotspots(hotspots);
+
+                    break;
+                default:
+                    super.handleMessage(message);
             }
         }
     }
@@ -76,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         bindService(new Intent(this, WiFiMonitor.class), _connection, Context.BIND_AUTO_CREATE);
+
+        requestConfiguredHotspots();
     }
 
     @Override
@@ -148,6 +162,21 @@ public class MainActivity extends AppCompatActivity {
                 Intent serviceIntent = new Intent(this, WiFiMonitor.class);
                 startForegroundService(serviceIntent);
         }
+    }
+
+    private void requestConfiguredHotspots() {
+        Message message = Message.obtain(null, WiFiMonitor.MESSAGE_GET_WIFI_ONLY_HOTSPOTS);
+
+        try {
+            _serviceMessenger.send(message);
+        }
+        catch (RemoteException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    private void showHotspots(ArrayList<String> hotspots) {
+
     }
 
     private void updateConnectedWiFi(String wiFiName) {

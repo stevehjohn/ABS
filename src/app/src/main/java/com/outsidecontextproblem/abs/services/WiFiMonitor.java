@@ -32,6 +32,7 @@ public class WiFiMonitor extends Service {
     public static final int MESSAGE_GET_WIFI_ONLY_HOTSPOTS = 4;
 
     public static final String MESSAGE_KEY_WIFI_NAME = "WIFI";
+    public static final String MESSAGE_KEY_WIFI_HOTSPOTS = "WIFI_HOTSPOTS";
 
     private static final String NOTIFICATION_CHANNEL_ID = "com.outsidecontextproblem.abs";
 
@@ -88,6 +89,7 @@ public class WiFiMonitor extends Service {
 
                     break;
                 case MESSAGE_GET_WIFI_ONLY_HOTSPOTS:
+                    _wiFiMonitor.returnHotspots();
 
                     break;
                 default:
@@ -134,6 +136,28 @@ public class WiFiMonitor extends Service {
         Messenger _messenger = new Messenger(new IncomingHandler(this));
 
         return _messenger.getBinder();
+    }
+
+    private void returnHotspots() {
+        // TEST CODE - REMOVE!!!
+        if (_wiFiSSIDs.isEmpty()) {
+            _wiFiSSIDs.add("BTHub-1234");
+            _wiFiSSIDs.add("BTHub-5678");
+        }
+
+        Message message = Message.obtain(null, MainActivity.MESSAGE_WIFI_HOTSPOTS);
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList(MESSAGE_KEY_WIFI_HOTSPOTS, _wiFiSSIDs);
+        message.setData(bundle);
+
+        try {
+            if (_client != null) {
+                _client.send(message);
+            }
+        }
+        catch (RemoteException exception) {
+            exception.printStackTrace();
+        }
     }
 
     private void doPoll() {
