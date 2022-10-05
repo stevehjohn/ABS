@@ -101,7 +101,6 @@ public class WiFiMonitor extends Service {
 
                     break;
                 case MESSAGE_GET_WIFI_ONLY_STATE:
-                    state = message.getData().getBoolean(MESSAGE_KEY_WIFI_ONLY_STATE);
                     // TODO: Do
 
                     break;
@@ -159,7 +158,7 @@ public class WiFiMonitor extends Service {
 
     private void setWiFiOnlyState(boolean state) {
         Log.i(WiFiMonitor.class.getName(), String.format("Request to change WiFi state: %b", state));
-        
+
         // TODO: Do
     }
 
