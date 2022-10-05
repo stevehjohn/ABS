@@ -290,6 +290,18 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        Message message = Message.obtain(null, WiFiMonitor.MESSAGE_ADD_WIFI_ONLY_HOTSPOT);
+        Bundle bundle = new Bundle();
+        bundle.putString(WiFiMonitor.MESSAGE_KEY_WIFI_NAME, _currentHotSpot);
+        message.setData(bundle);
+
+        try {
+            _serviceMessenger.send(message);
+        }
+        catch (RemoteException exception) {
+            exception.printStackTrace();
+        }
+
         int index = 0;
 
         for (String hotspot: _hotspots) {

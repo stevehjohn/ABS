@@ -46,7 +46,7 @@ public class WiFiMonitor extends Service {
 
     private static final int POLL_MILLISECONDS = 2_000;
 
-    private static final int NOTIFICATION_ID = 824954302;
+    private static final int NOTIFICATION_ID = 123; //824954302;
 
     private NotificationManager _notificationManager;
 
