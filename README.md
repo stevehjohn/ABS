@@ -14,6 +14,10 @@ This app will allow you to specify certain WiFi access points where you always w
 
 When it detects you are connected to one, it will perform the Airplane mode, re-enable WiFi/Bluetooth procedure automatically. When you disconnect, it reverts the phone to normal usage.
 
+## What's with all the permission requests?
+
+Unfortunately, to get WiFi network names Android requires location permissions. As this service monitors in the background, it also needs the permission even when the app UI isn't running. Lastly, Android forces you to show a notification for a contiunally running service.
+
 ## TODO List
 
 - Modify dimensions in text_row_item.xml to come from dimens.xml

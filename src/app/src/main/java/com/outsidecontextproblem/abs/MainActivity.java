@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recycler = findViewById(R.id.recyclerHotspots);
         recycler.setLayoutManager(new LinearLayoutManager(this));
-        _hotSpotAdapter = new HotSpotAdapter(_hotspots);
+        _hotSpotAdapter = new HotSpotAdapter(_hotspots, this);
         recycler.setAdapter(_hotSpotAdapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(_hotSpotAdapter));
         itemTouchHelper.attachToRecyclerView(recycler);

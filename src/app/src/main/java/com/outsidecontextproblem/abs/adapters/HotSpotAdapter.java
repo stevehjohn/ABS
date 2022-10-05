@@ -1,5 +1,6 @@
 package com.outsidecontextproblem.abs.adapters;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.outsidecontextproblem.abs.R;
 
 import java.util.ArrayList;
@@ -15,6 +17,11 @@ import java.util.ArrayList;
 public class HotSpotAdapter extends RecyclerView.Adapter<HotSpotAdapter.ViewHolder> {
 
     private ArrayList<String> _hotspots;
+
+    private Activity _activity;
+
+    private String _deletedItem;
+    private int _deletedPosition;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView _textView;
@@ -30,8 +37,9 @@ public class HotSpotAdapter extends RecyclerView.Adapter<HotSpotAdapter.ViewHold
         }
     }
 
-    public HotSpotAdapter(ArrayList<String> hotspots) {
+    public HotSpotAdapter(ArrayList<String> hotspots, Activity activity) {
         _hotspots = hotspots;
+        _activity = activity;
     }
 
     @NonNull
@@ -56,6 +64,27 @@ public class HotSpotAdapter extends RecyclerView.Adapter<HotSpotAdapter.ViewHold
     }
 
     public void deleteItem(int position) {
+        _deletedPosition = position;
+        _deletedItem = _hotspots.get(position);
+
         _hotspots.remove(position);
+
+        notifyItemRemoved(position);
+
+        showUndoSnackbar();
+    }
+
+    private void showUndoSnackbar() {
+        View view = _activity.findViewById(R.id.recyclerHotspots);
+        Snackbar snackbar = Snackbar.make(view, String.format(_activity.getResources().getString(R.string.hotspot_deleted), _deletedItem), Snackbar.LENGTH_LONG);
+        snackbar.setAnimationMode(Snackbar.ANIMATION_MODE_FADE);
+        snackbar.setAction(R.string.undo, v -> undoDelete());
+        snackbar.show();
+    }
+
+    private void undoDelete() {
+        _hotspots.add(_deletedPosition, _deletedItem);
+
+        notifyItemInserted(_deletedPosition);
     }
 }
