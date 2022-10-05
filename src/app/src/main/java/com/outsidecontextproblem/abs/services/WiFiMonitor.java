@@ -40,7 +40,7 @@ public class WiFiMonitor extends Service {
 
     private static final String NOTIFICATION_CHANNEL_ID = "com.outsidecontextproblem.abs";
 
-    private static final int POLL_MILLISECONDS = 2_000;
+    private static final int POLL_MILLISECONDS = 30_000;
 
     private static final int NOTIFICATION_ID = 824954302;
 
@@ -71,6 +71,8 @@ public class WiFiMonitor extends Service {
                 case MESSAGE_REGISTER_CLIENT:
                     _wiFiMonitor._client = message.replyTo;
 
+                    _wiFiMonitor.doPoll();
+
                     break;
                 case MESSAGE_ADD_WIFI_ONLY_HOTSPOT:
                     ssid = message.getData().getString(MESSAGE_KEY_WIFI_NAME);
@@ -94,6 +96,10 @@ public class WiFiMonitor extends Service {
                     break;
                 case MESSAGE_GET_WIFI_ONLY_HOTSPOTS:
                     _wiFiMonitor.returnHotspots();
+
+                    break;
+                case MESSAGE_GET_WIFI_ONLY_STATE:
+                    // TODO: Do
 
                     break;
                 case MESSAGE_SET_WIFI_ONLY_STATE:

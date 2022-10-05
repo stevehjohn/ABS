@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView _recyclerView;
     private Button _addButton;
+    private Switch _wiFiOnlySwitch;
 
     private static class IncomingHandler extends Handler {
         private final MainActivity _mainActivity;
@@ -163,6 +164,9 @@ public class MainActivity extends AppCompatActivity {
 
         _addButton = findViewById(R.id.buttonAdd);
         _addButton.setOnClickListener(view -> addCurrentWifiHotSpot());
+
+        _wiFiOnlySwitch = findViewById(R.id.switchWiFiOnly);
+        _wiFiOnlySwitch.setOnCheckedChangeListener((view, newState) -> wiFiOnlyStateChanged(newState));
     }
 
     @Override
@@ -179,9 +183,9 @@ public class MainActivity extends AppCompatActivity {
 
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(this, new String[]
-                            {
-                                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                            }, BACKGROUND_LOCATION_REQUEST);
+                    {
+                            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                    }, BACKGROUND_LOCATION_REQUEST);
                 }
 
                 return;
@@ -199,8 +203,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void wiFiOnlyStateChanged(boolean state) {
-        Switch toggle = findViewById(R.id.switchWiFiOnly);
-        toggle.setChecked(state);
+        _wiFiOnlySwitch.setChecked(state);
 
         TextView text = findViewById(R.id.textWiFiOnly);
         text.setText(state
