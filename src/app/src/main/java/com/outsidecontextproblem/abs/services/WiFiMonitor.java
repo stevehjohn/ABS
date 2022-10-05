@@ -67,6 +67,7 @@ public class WiFiMonitor extends Service {
         @Override
         public void handleMessage(Message message) {
             String ssid;
+            boolean state;
 
             switch (message.what) {
                 case MESSAGE_REGISTER_CLIENT:
@@ -100,11 +101,12 @@ public class WiFiMonitor extends Service {
 
                     break;
                 case MESSAGE_GET_WIFI_ONLY_STATE:
+                    state = message.getData().getBoolean(MESSAGE_KEY_WIFI_ONLY_STATE);
                     // TODO: Do
 
                     break;
                 case MESSAGE_SET_WIFI_ONLY_STATE:
-                    boolean state = message.getData().getBoolean(MESSAGE_KEY_WIFI_ONLY_STATE);
+                    state = message.getData().getBoolean(MESSAGE_KEY_WIFI_ONLY_STATE);
 
                     _wiFiMonitor.setWiFiOnlyState(state);
 
@@ -156,7 +158,9 @@ public class WiFiMonitor extends Service {
     }
 
     private void setWiFiOnlyState(boolean state) {
-
+        Log.i(WiFiMonitor.class.getName(), String.format("Request to change WiFi state: %b", state));
+        
+        // TODO: Do
     }
 
     private void returnHotspots() {

@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         _addButton.setOnClickListener(view -> addCurrentWifiHotSpot());
 
         _wiFiOnlySwitch = findViewById(R.id.switchWiFiOnly);
-        _wiFiOnlySwitch.setOnCheckedChangeListener((view, newState) -> wiFiOnlyStateChanged(newState));
+        _wiFiOnlySwitch.setOnCheckedChangeListener((view, newState) -> changeWiFiOnlyState(newState));
     }
 
     @Override
@@ -209,6 +209,25 @@ public class MainActivity extends AppCompatActivity {
         text.setText(state
             ? getResources().getString(R.string.wifi_only_on)
             : getResources().getString(R.string.wifi_only_off));
+    }
+
+    private void changeWiFiOnlyState(boolean state) {
+        TextView text = findViewById(R.id.textWiFiOnly);
+        text.setText(state
+                ? getResources().getString(R.string.wifi_only_on)
+                : getResources().getString(R.string.wifi_only_off));
+
+        Message message = Message.obtain(null, WiFiMonitor.MESSAGE_SET_WIFI_ONLY_STATE);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(WiFiMonitor.MESSAGE_KEY_WIFI_ONLY_STATE, state);
+        message.setData(bundle);
+
+        try {
+            _serviceMessenger.send(message);
+        }
+        catch (RemoteException exception) {
+            exception.printStackTrace();
+        }
     }
 
     private void requestConfiguredHotspots() {
