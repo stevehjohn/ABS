@@ -16,9 +16,9 @@ import java.util.ArrayList;
 
 public class HotSpotAdapter extends RecyclerView.Adapter<HotSpotAdapter.ViewHolder> {
 
-    private ArrayList<String> _hotspots;
+    private final ArrayList<String> _hotspots;
 
-    private Activity _activity;
+    private final Activity _activity;
 
     private String _deletedItem;
     private int _deletedPosition;

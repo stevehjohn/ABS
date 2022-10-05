@@ -21,6 +21,8 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.outsidecontextproblem.abs.adapters.HotSpotAdapter;
@@ -43,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
 
     private final ArrayList<String> _hotspots = new ArrayList<>();
     private HotSpotAdapter _hotSpotAdapter;
+
+    private String _currentHotSpot;
+
+    private RecyclerView _recyclerView;
 
     private static class IncomingHandler extends Handler {
         private final MainActivity _mainActivity;
@@ -139,12 +145,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        RecyclerView recycler = findViewById(R.id.recyclerHotspots);
-        recycler.setLayoutManager(new LinearLayoutManager(this));
+        _recyclerView = findViewById(R.id.recyclerHotspots);
+        _recyclerView.setLayoutManager(new LinearLayoutManager(this));
         _hotSpotAdapter = new HotSpotAdapter(_hotspots, this);
-        recycler.setAdapter(_hotSpotAdapter);
+        _recyclerView.setAdapter(_hotSpotAdapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(_hotSpotAdapter));
-        itemTouchHelper.attachToRecyclerView(recycler);
+        itemTouchHelper.attachToRecyclerView(_recyclerView);
+
+        Button addButton = findViewById(R.id.buttonAdd);
+        addButton.setOnClickListener(view -> AddCurrentWifiHotSpot());
     }
 
     @Override
@@ -204,6 +213,8 @@ public class MainActivity extends AppCompatActivity {
     private void updateConnectedWiFi(String wiFiName) {
         TextView textView = findViewById(R.id.textViewWiFiName);
         textView.setText(wiFiName);
+
+        _currentHotSpot = wiFiName;
     }
 
     private boolean serviceIsRunning() {
@@ -216,5 +227,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return false;
+    }
+
+    private void AddCurrentWifiHotSpot() {
+        _hotspots.add(0, _currentHotSpot);
+
+        _hotSpotAdapter.notifyItemInserted(0);
+        
+        _recyclerView.scrollToPosition(0);
     }
 }

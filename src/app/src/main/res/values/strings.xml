@@ -7,4 +7,5 @@
     <string name="ui_main_hotspots">WiFi Only Calling Hotspots</string>
     <string name="hotspot_deleted">%s deleted</string>
     <string name="undo">Undo</string>
+    <string name="add_button">+</string>
 </resources>
