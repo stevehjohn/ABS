@@ -6,8 +6,10 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -17,6 +19,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.provider.Settings;
 import android.support.v4.os.IResultReceiver;
+import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -25,6 +28,9 @@ import androidx.annotation.Nullable;
 import com.outsidecontextproblem.abs.MainActivity;
 import com.outsidecontextproblem.abs.R;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.UUID;
@@ -224,7 +230,7 @@ public class WiFiMonitor extends Service {
             exception.printStackTrace();
         }
 
-        if (! _overridden){
+        if (! _overridden) {
             if (! _wifiCalling) {
                 if (_wiFiSSIDs.contains(name)) {
                     switchToWiFiCalling();
@@ -243,6 +249,12 @@ public class WiFiMonitor extends Service {
         _notificationBuilder.setContentText(getResources().getString(R.string.notification_wifi_only));
 
         _notificationManager.notify(NOTIFICATION_ID, _notificationBuilder.build());
+
+        Settings.System.putInt(getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 1);
+
+        Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+        intent.putExtra("state", true);
+        sendBroadcast(intent);
 
         _wifiCalling = true;
     }
